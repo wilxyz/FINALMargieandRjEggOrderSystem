@@ -1,6 +1,6 @@
 <div align="center" style="padding-top: 5px">
 
-<img src="" width="300" height="300"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/img/logo_nav.png" width="300" height="300"/>
 
 ## Margie and Rj Egg Store
 *Fresh Eggs Daily!*
@@ -149,28 +149,47 @@ npm start
 - **Database connection errors** - Ensure MySQL is running in XAMPP. Verify DB credentials in `.env` or server config. Confirm `egg_trading` exists and tables were created.
 - **Static assets 404** - Confirm `server.js` serves static files from the correct folder (for example `public`).
 
+<div align="center" style="padding-top: 5px">
+  
 ## User Interface of the Website
 
-### Log-In Page
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_1.png" width="1000" height="1000" align= "center"/>
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_2.png" width="1000" height="1000" align= "center"/>
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_3.png" width="1000" height="1000" align= "center"/>
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_4.png" width="1000" height="1000" align= "center"/>
+## Log-In Page
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_1.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_2.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_3.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_4.png" width="1000" height="1000"/>
 
-### Log-In Page - Sign Up
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Sign_Up.png" width="1000" height="1000" align= "center"/>
+## Log-In Page - Sign Up
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Sign_Up.png" width="1000" height="1000"/>
 
-### Log-In Page - Forgot Password
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Forgot_Pass.png" width="1000" height="1000" align= "center"/>
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Verify_OTP.png" width="1000" height="1000" align= "center"/>
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Reset_Pass.png" width="1000" height="1000" align= "center"/>
+## Log-In Page - Forgot Password
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Forgot_Pass.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Verify_OTP.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Reset_Pass.png" width="1000" height="1000"/>
 
-### Contact Us
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Contact_Us.png" width="1000" height="1000" align= "center"/>
+## Contact Us
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Contact_Us.png" width="1000" height="1000"/>
 
-### Ordering Page
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page.png" width="1000" height="1000" align= "center"/>
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page2.png" width="1000" height="1000" align= "center"/>
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page_PrintReceipt.png" width="1000" height="1000" align= "center"/>
+## Ordering Page
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page2.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page_PrintReceipt.png" width="1000" height="1000"/>
 
-### Admin's Console
+## Admin's Console - Dashboard
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Admin's_Console.png" width="1000" height="1000"/>
+
+## Admin's Console - Orders
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Admin's_Console2.png" width="1000" height="1000"/>
+
+## Admin's Console - Inventory
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Admin's_Console3.png" width="1000" height="1000"/>
+
+## Admin's Console - Reports
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Admin's_Console4.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Admin's_Console5.png" width="1000" height="1000"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Admin's_Console6.png" width="1000" height="1000"/>
+
+## Admin's Console - Users
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Admin's_Console7.png" width="1000" height="1000"/>
+
+</div>
