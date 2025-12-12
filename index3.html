@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forgot Password</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" rel="stylesheet" />
+    <link href="styles.css" rel="stylesheet"/>
+</head>
+
+
+
+<body>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <p id="modal-message"></p>
+        <button id="modal-close">OK</button>
+    </div>
+</div>
+    <section class="login">
+        <div class="login__container grid">
+            
+            <!-- Picture side -->
+            <div class="login__swiper">
+                <div>
+                    <img src="img/logo.png" alt="image" class="login__swiper-img">
+                </div>
+            </div>
+
+            <!-- Form side -->
+            <div class="login__area grid">
+                <div class="login__data">
+                   <h1 class="login__title">Forgot Your Password?</h1>
+                   <p class="login__description">Enter your email to reset your password.</p>
+                </div>
+
+                <form action="/forgot-password" method="POST" class="login__form">
+                    <div class="login__content grid">
+                        <div class="login__box">
+                            <input type="email" name="email" placeholder="Email" required class="login__input">
+                            <i class="ri-mail-line"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login__button">Send OTP</button>
+                </form>
+
+                <p class="login__switch">
+                    Remembered your password? 
+                    <a href="index.html" class="login__sign">Log In</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+     <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,1444 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <script src="/vendor/chart.js/dist/chart.umd.min.js"></script>
+  <style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Unbounded:wght@200..900&display=swap');
+    :root{
+      --bg:#f6f8fb; --card:#fff; --accent:#7B542F; --muted:#666;
+      --notice-bg: linear-gradient(90deg,#fff8e6,#fff4f0);
+      --select-border: rgba(43,122,120,0.12);
+    }
+    *{box-sizing:border-box}
+    body{font-family:'Poppins', sans-serif;margin:0;background:#EFE9E3;color:#7B542F}
+    .wrap{max-width:1100px;margin:24px auto;padding:20px}
+    .tabs{display:flex;gap:12px;justify-content:center;align-items:center;padding:0 12px; font-family: 'Poppins', sans-serif;}
+    .tab-btn{flex:1 1 0;min-width:0;padding:12px 14px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:#7B542F;color:#fff;font-weight:700;cursor:pointer;text-align:center;box-shadow:0 4px 10px rgba(10,10,30,0.04);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family: 'Poppins', sans-serif;}
+    .tab-btn.active,.tab-btn:hover{background:#B6771D;color:#fff;transform:translateY(-1px);box-shadow:0 8px 20px rgba(43,122,204,0.12)}
+    @media (max-width:720px){ .tabs{flex-wrap:wrap} .tab-btn{flex:1 1 calc(50% - 8px);font-size:14px;padding:10px 12px} }
+    @media (max-width:420px){ .tab-btn{flex:1 1 100%} }
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+    .cards{display:flex;gap:12px;margin:12px 0}
+    .card{flex:1;background:var(--card);padding:16px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+    .card strong{display:block;font-size:20px}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+    .btn{padding:6px 10px;border-radius:6px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+    .small-btn{padding:4px 8px;font-size:13px}
+
+   .table {
+  width:100%;
+  border-collapse: separate;      /* allow border-spacing */
+  border-spacing: 0 15px;         /* vertical gap between rows */
+  background: transparent;        /* make table background transparent */
+  border-radius: 8px;
+  overflow: visible;
+}
+
+/* Each row visually separated but transparent background */
+.table tbody tr {
+  background: transparent;        /* transparent row background */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 8px solid rgba(0,0,0,0.04);
+  border-radius: 8px;
+  display: table-row;
+}
+
+/* Cells: transparent so underlying page bg shows */
+.table th, .table td {
+  padding: 10px;
+  border-bottom: none;
+  background: white;
+  vertical-align: middle;
+}
+
+/* Header row stays distinct */
+.table thead tr th {
+  background: #7B542F;
+  color: white;
+  padding: 10px;
+}
+
+/* Styled select (dropdown) — visible color + consistent look */
+.statusSelect {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--select-border);
+  background-color: #fff;         /* default fallback */
+  font-weight: 700;
+  min-width: 140px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Force color styles to override browser defaults */
+.statusSelect.status-cancelled { background-color: #ffe6e6 !important; color: #9b1c1c !important; border-color: rgba(155,28,28,0.12) !important; }
+.statusSelect.status-pending   { background-color: #fff7d6 !important; color: #8a6b00 !important; border-color: rgba(138,107,0,0.12) !important; }
+.statusSelect.status-ongoing   { background-color: #f3f4f6 !important; color: #4b5563 !important; border-color: rgba(75,85,99,0.06) !important; }
+.statusSelect.status-completed { background-color: #e6f9ea !important; color: #0b6b2f !important; border-color: rgba(11,107,47,0.08) !important; }
+
+/* Make the select text bold */
+.statusSelect option { font-weight:700; }
+
+/* Controls spacing */
+.controls { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+
+/* Make the controls area align nicely */
+.controls { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+
+/* Smaller action buttons inside table */
+.small-btn { padding:6px 10px; border-radius:6px; font-size:13px; }
+    .input,textarea,select{padding:8px;border:1px solid #e6e9ef;border-radius:6px;width:100%}
+    .modal{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center}
+    .modal .panel{background:#fff;padding:16px;border-radius:8px;width:480px;max-width:95%}
+    .admin-hero{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:28px 20px;background:var(--accent) url('/img/img-3.png') no-repeat center center;background-size:cover;color:#fff;border-bottom:6px solid rgba(0,0,0,0.06);border-radius:8px}
+    .brand{display:flex;align-items:center;gap:14px;flex:1 1 auto;min-width:0}
+    .logo{width:84px;height:84px;border-radius:8px;object-fit:contain;background:rgba(255,255,255,0.06);padding:6px;box-shadow:0 6px 14px rgba(0,0,0,0.12);flex:0 0 auto}
+    .titles{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+    .titles h1{margin:0;font-size:20px;line-height:1.05;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .titles p{margin:4px 0 0 0;font-size:13px;color:rgba(255,255,255,0.9);font-weight:600}
+    .header-actions{flex:0 0 auto;display:flex;align-items:center}
+    #logoutBtnAdmin{background-color:#fff8f0;color:#6b4526;border:1px solid rgba(0,0,0,0.06);padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:15px;box-shadow:0 6px 14px rgba(0,0,0,0.08)}
+    #logoutBtnAdmin:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(0,0,0,0.12)}
+    @media (max-width:560px){ .admin-hero{flex-direction:column;align-items:stretch;text-align:center;padding:18px 12px} .brand{justify-content:center} .titles{align-items:center} #logoutBtnAdmin{width:100%;margin-top:10px} .logo{width:72px;height:72px} .titles h1{font-size:18px} }
+    /* Ensure recent orders show as white cards */
+  /* Add these styles (place inside the existing <style> block) */
+#recentOrdersContainer { margin-top: 12px; }
+#recentOrders {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06); 
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+#recentOrders .order {
+  background: var(--card, #fff);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 72px;
+  justify-content: space-between;
+}
+.order .top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.order .meta { font-size:13px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.status-badge {
+  display:inline-block;
+  padding:6px 8px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:12px;
+  color:#111;
+  min-width:78px;
+  text-align:center;
+  box-shadow:0 1px 0 rgba(255,255,255,0.2) inset;
+}
+/* Color mapping */
+.status-cancelled { background:#ffe6e6; color:#9b1c1c; border:1px solid rgba(155,28,28,0.08); }
+.status-pending   { background:#fff7d6; color:#8a6b00; border:1px solid rgba(138,107,0,0.06); }
+.status-ongoing   { background:#f3f4f6; color:#4b5563; border:1px solid rgba(75,85,99,0.04); }
+.status-completed { background:#e6f9ea; color:#0b6b2f; border:1px solid rgba(11,107,47,0.06); }
+
+/* smaller text for phone/date lines */
+.order .sub { font-size:12px; color:#6b6b6b; }
+
+/* Ensure controls align horizontally and wrap on small screens */
+#inventoryControls, .controls {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+
+/* Make primary action stand out and keep sizes consistent */
+#newInventoryBtn {
+  padding:10px 14px;
+  font-size:14px;
+  border-radius:8px;
+  border:0;
+  cursor:pointer;
+}
+#newInventoryBtn { background:var(--accent); color:#fff; box-shadow:0 6px 14px rgba(43,122,120,0.08); }
+#newInventoryBtn:hover { transform:translateY(-2px); }
+
+/* Show more / Show less button only */
+.show-more-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid rgba(43,122,120,0.12);
+  background: #7B542F;
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+  box-shadow: 0 4px 10px rgba(43,122,120,0.06);
+  user-select:none;
+}
+
+/* Hover / focus / active states */
+.show-more-btn:hover,
+.show-more-btn:focus {
+  transform: translateY(-2px);
+  background: #FFCF71;
+  outline: none;
+  box-shadow: 0 8px 20px rgba(43,122,120,0.12);
+  color: #7B542F;
+}
+.show-more-btn:active { transform: translateY(0); box-shadow: 0 4px 8px rgba(43,122,120,0.08); }
+
+/* Inventory form labels and layout */
+.modal .panel .form-row { margin-bottom:12px; display:flex; flex-direction:column; gap:6px; }
+.modal .panel label { font-size:13px; font-weight:700; color:#222; }
+.modal .panel .hint { font-size:12px; color:var(--muted); }
+
+/* Inputs full width and consistent spacing */
+.modal .panel .input { width:100%; padding:10px; border-radius:8px; border:1px solid #e6e9ef; font-size:14px; }
+
+/* Actions row */
+.modal .panel .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+.modal .panel .actions .btn { padding:10px 14px; border-radius:8px; font-weight:700; cursor:pointer; border:0; }
+.modal .panel .actions .btn.cancel { background:transparent; color:#6b6b6b; border:1px solid rgba(0,0,0,0.06); }
+.modal .panel .actions .btn.save { background:var(--accent); color:#fff; box-shadow:0 6px 14px rgba(43,122,204,0.12); }
+.modal .panel .actions .btn.cancel:hover { transform:translateY(-1px); }
+.modal .panel .actions .btn.save:hover { transform:translateY(-1px); background:#6f4a2a; }
+
+/* Make modal inputs and labels readable on small screens */
+@media (max-width:560px) {
+  .modal .panel { padding:14px; }
+  .modal .panel .actions { flex-direction:column-reverse; }
+  .modal .panel .actions .btn { width:100%; }
+}
+
+.confirm-modal { position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; z-index:1200; }
+.confirm-modal .panel { width:420px; max-width:95%; padding:18px; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.25); background-color: white !important; color: #111;}
+.confirm-modal .panel h4 { margin:0 0 8px 0; font-size:16px; }
+.confirm-modal .panel p { margin:0 0 14px 0; color:var(--muted); font-size:14px; }
+.confirm-modal .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+.confirm-modal .actions .btn { padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer; border:0; }
+.confirm-modal .actions .btn.cancel { background:transparent; color:#6b6b6b; border:1px solid rgba(0,0,0,0.06); }
+.confirm-modal .actions .btn.confirm { background:#e53e3e; color:#fff; box-shadow:0 6px 14px rgba(229,62,62,0.12); }
+@media (max-width:560px) { .confirm-modal .panel { padding:14px; } .confirm-modal .actions { flex-direction:column-reverse; } .confirm-modal .actions .btn { width:100%; } }
+
+/* Search input styling for controls */
+.controls .search {
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid #e6e9ef;
+  background:#fff;
+  min-width:200px;
+  font-size:14px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+}
+.controls .search::placeholder { color:#9aa3ad; font-weight:600; }
+
+/* Responsive table wrapper: preserves table layout but allows horizontal pan on small screens */
+.table-wrap { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+/* Remove large hard min-widths so table can shrink naturally; keep a sensible minimum */
+.table { min-width: 720px; width:100%; border-collapse: separate; border-spacing: 0 12px; }
+
+/* Table spacing and touch-friendly paddings */
+.table th, .table td { padding:12px 14px; white-space:nowrap; vertical-align:middle; font-size:0.95rem; }
+.table thead th { background:#7B542F; color:#fff; position:sticky; top:0; z-index:0; }
+
+/* Make selects and buttons easier to tap on mobile */
+.statusSelect, .small-btn, .btn { min-height:40px; padding:10px 12px; }
+
+/* Reduce min-width on medium screens */
+@media (max-width:920px){
+  .table { min-width:640px; }
+  .table th, .table td { padding:10px 12px; font-size:0.92rem; }
+}
+
+/* Very narrow screens: optional stacked fallback (keeps markup unchanged) */
+@media (max-width:420px){
+  /* If you want the stacked fallback, add class .stacked to the wrapper */
+  .table-wrap.stacked { overflow:visible; }
+  .table.stacked thead { display:none; }
+  .table.stacked tbody tr { display:block; margin-bottom:12px; border-radius:8px; background:var(--card); box-shadow:0 1px 3px rgba(0,0,0,0.04); padding:6px; }
+  .table.stacked tbody td { display:flex; justify-content:space-between; padding:8px 10px; white-space:normal; }
+  .table.stacked tbody td::before { content: attr(data-label); font-weight:700; color:var(--muted); margin-right:8px; flex:0 0 40%; max-width:40%; overflow:hidden; text-overflow:ellipsis; }
+  .table.stacked tbody td > * { flex:1 1 auto; text-align:right; }
+}
+
+.admin-hero { padding: clamp(12px, 2.2vw, 28px) 20px; }
+
+/* Title scales fluidly but stays within readable bounds */
+.titles h1 {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.05;
+  color: #fff;
+  font-size: clamp(16px, 2.6vw, 20px); /* min 16px, fluid, max 20px */
+  white-space: normal;                  /* allow wrapping on small screens */
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;                /* optional: limit to 2 lines */
+  -webkit-box-orient: vertical;
+  max-height: calc(2 * 1.05em);         /* keep height consistent when clamped */
+}
+
+/* Subtitle slightly smaller and responsive */
+.titles p {
+  margin: 6px 0 0 0;
+  font-size: clamp(12px, 1.8vw, 14px);
+  color: rgba(255,255,255,0.95);
+  font-weight: 600;
+  white-space: normal;
+}
+
+/* Logo scales down smoothly on small screens */
+.logo {
+  width: clamp(56px, 8vw, 84px);
+  height: clamp(56px, 8vw, 84px);
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+/* Ensure header layout stacks nicely on narrow screens */
+@media (max-width: 560px) {
+  /* Keep header as a horizontal row instead of stacking */
+  .admin-hero {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px;
+    padding: 12px 14px;
+    text-align: left;
+  }
+
+  /* Brand area: logo + titles remain inline and can shrink */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 auto;
+    min-width: 0; /* allow children to shrink */
+  }
+
+  /* Logo: slightly smaller on small screens */
+  .logo {
+    width: clamp(48px, 9vw, 72px);
+    height: clamp(48px, 9vw, 72px);
+    flex: 0 0 auto;
+  }
+
+  /* Titles sit to the right of the logo and can wrap to two lines */
+  .titles {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .titles h1 {
+    margin: 0;
+    font-size: clamp(14px, 3.2vw, 18px);
+    line-height: 1.05;
+    font-weight: 800;
+    color: #fff;
+    white-space: normal;        /* allow wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;      /* limit to 2 lines */
+    -webkit-box-orient: vertical;
+    max-height: calc(2 * 1.05em);
+  }
+
+  .titles p {
+    margin: 2px 0 0 0;
+    font-size: clamp(11px, 2.2vw, 13px);
+    color: rgba(255,255,255,0.95);
+    font-weight: 600;
+    white-space: normal;
+  }
+
+  /* Keep logout button visible on the right; shrink if needed */
+  .header-actions {
+    flex: 0 0 auto;
+    margin-left: 8px;
+  }
+  #logoutBtnAdmin {
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  /* Ensure the hero background and spacing remain visually balanced */
+  .admin-hero { background-size: cover; }
+}
+  </style>
+</head>
+<body>
+
+<header class="hero admin-hero">
+  <div class="brand" role="banner">
+    <img src="/img/logo_nav.png" alt="Margie & RJ Egg Store logo" class="logo" />
+    <div class="titles">
+      <h1 id="siteTitleAdmin">Welcome to the Margie & RJ Egg Store! - Admin's Console</h1>
+      <p id="siteSubtitleAdmin">Keep Track of the daily Sales </p>
+    </div>
+  </div>
+  <div class="header-actions" aria-hidden="false">
+    <button id="logoutBtnAdmin" class="logout-btn" title="Logout">Logout</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" role="tablist" aria-label="Admin tabs">
+    <button data-tab="dashboard" class="tab-btn active" role="tab" aria-selected="true">Dashboard</button>
+    <button data-tab="orders" class="tab-btn" role="tab">Orders</button>
+    <button data-tab="inventory" class="tab-btn" role="tab">Inventory</button>
+    <button data-tab="reports" class="tab-btn" role="tab">Reports</button>
+    <button data-tab="users" class="tab-btn" role="tab">Users</button>
+  </nav>
+
+  <main>
+    <section id="dashboard" class="tab-content active" role="tabpanel">
+      <h2>Overview</h2>
+      <div class="cards">
+        <div class="card"><strong id="totalSales">₱0.00</strong><span>Total Sales</span></div>
+        <div class="card"><strong id="ordersCount">0</strong><span>Orders</span></div>
+        <div class="card"><strong id="productsSold">0</strong><span>Products Sold</span></div>
+      </div>
+      <div id="recentOrdersContainer">
+        <h3>Recent Orders</h3>
+        <div id="recentOrders" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="orders" class="tab-content" role="tabpanel" aria-hidden="true">
+      <h2>Orders</h2>
+      <div id="ordersTableWrap"></div>
+    </section>
+
+    <section id="inventory" class="tab-content" role="tabpanel" aria-hidden="true">
+      <h2>Inventory</h2>
+      <div id="inventoryControls">
+        <button id="newInventoryBtn" class="btn">New Item</button>
+      </div>
+      <div id="inventoryTableWrap"></div>
+    </section>
+
+    <section id="reports" class="tab-content" role="tabpanel" aria-hidden="true">
+      <h2>Sales Reports</h2>
+      <div id="reportsSummary"></div>
+      <h3>Sales by Day (last 30 days)</h3>
+      <div id="salesByDay">
+        <div class="chart-card" style="margin-bottom:12px">
+          <canvas id="eggOrdersChart" width="800" height="240" aria-label="Sales by day chart"></canvas>
+        </div>
+      <div id="salesByDayTable"></div>
+      </div>
+      <h3></h3>
+      <div id="topProducts"></div>
+    </section>
+
+    <section id="users" class="tab-content" role="tabpanel" aria-hidden="true">
+      <h2>Users</h2>
+      <div id="usersTableWrap"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(async function(){
+  const qs = s => document.querySelector(s);
+  const qsa = s => Array.from(document.querySelectorAll(s));
+
+  // Tabs
+  function activateTab(btn) {
+    qsa('.tabs button').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+
+    const tab = btn.dataset.tab;
+    qsa('.tab-content').forEach(tc => {
+      tc.classList.remove('active');
+      tc.setAttribute('aria-hidden', 'true');
+    });
+    const panel = qs(`#${tab}`);
+    if (panel) {
+      panel.classList.add('active');
+      panel.setAttribute('aria-hidden', 'false');
+    }
+
+    // lazy load content
+    if (tab === 'dashboard') loadDashboard();
+    if (tab === 'orders') loadOrders();
+    if (tab === 'inventory') loadInventory();
+    if (tab === 'reports') loadReports();
+    if (tab === 'users') loadUsers();
+  }
+
+  qsa('.tabs button').forEach(btn => {
+    btn.addEventListener('click', () => activateTab(btn));
+  });
+
+  // Logout
+  document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtnAdmin = document.getElementById('logoutBtnAdmin');
+    if (!logoutBtnAdmin) return;
+    logoutBtnAdmin.addEventListener('click', async () => {
+      try {
+        const res = await fetch('/logout', { method: 'POST', credentials: 'same-origin' });
+        if (res.ok) {
+          try {
+            const j = await res.json();
+            if (j && j.redirect) return window.location = j.redirect;
+          } catch (e) {}
+          window.location = '/login';
+        } else {
+          window.location = '/login';
+        }
+      } catch (err) {
+        console.error('Logout failed', err);
+        window.location = '/login';
+      }
+    });
+  });
+
+  // Initial load
+  loadDashboard();
+
+  // ---------- Dashboard ----------
+  async function loadDashboard(){
+  try {
+    // Fetch admin orders (includes items)
+    const res = await fetch('/admin/api/orders');
+    if (!res.ok) throw res;
+    const data = await res.json();
+    const allOrders = Array.isArray(data.orders) ? data.orders : [];
+
+    // Total orders (all statuses)
+    const totalOrdersCount = allOrders.length;
+
+    // Filter only completed orders for sales and products sold
+    const completedOrders = allOrders.filter(o => String(o.status).toLowerCase() === 'completed');
+
+    // Total sales: sum total_amount of completed orders
+    const totalSalesValue = completedOrders.reduce((sum, o) => {
+      const amt = Number(o.total_amount) || 0;
+      return sum + amt;
+    }, 0);
+
+    // Products sold: sum quantities of items in completed orders
+    const productsSoldCount = completedOrders.reduce((sum, o) => {
+      if (!Array.isArray(o.items)) return sum;
+      return sum + o.items.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+    }, 0);
+
+    // Update dashboard numbers
+    qs('#totalSales').textContent = `₱${Number(totalSalesValue).toFixed(2)}`;
+    qs('#ordersCount').textContent = totalOrdersCount || 0;
+    qs('#productsSold').textContent = productsSoldCount || 0;
+
+    // Recent orders (keep existing behavior: latest 6 orders)
+   const ro = allOrders.slice(0, 8);
+const container = qs('#recentOrders');
+if (!ro.length) {
+  container.innerHTML = '<p style="color:var(--muted)">No recent orders</p>';
+} else {
+  const statusMap = status => {
+    const s = String(status || '').toLowerCase();
+    if (s === 'cancelled' || s === 'canceled') return { cls: 'status-cancelled', label: 'Cancelled' };
+    if (s === 'pending') return { cls: 'status-pending', label: 'Pending' };
+    if (s === 'ongoing' || s === 'on-going') return { cls: 'status-ongoing', label: 'On-going' };
+    if (s === 'completed' || s === 'complete') return { cls: 'status-completed', label: 'Completed' };
+    return { cls: 'status-ongoing', label: String(status || 'Unknown') };
+  };
+
+  container.innerHTML = ro.map(o => {
+    const st = statusMap(o.status);
+    const name = escapeHtml(o.name || 'Customer');
+    const phone = escapeHtml(o.phone || '');
+    const pickup = `${escapeHtml(o.pickup_date || '')} ${escapeHtml(o.pickup_time || '')}`.trim();
+    const total = `₱${Number(o.total_amount || 0).toFixed(2)}`;
+    return `
+      <article class="order" role="article" aria-label="Order ${escapeHtml(String(o.id))}">
+        <div class="top">
+          <div style="min-width:0">
+            <div style="font-weight:800; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">#${escapeHtml(String(o.id))} — ${name}</div>
+            <div class="meta">${pickup} • ${phone}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+            <div class="status-badge ${st.cls}">${st.label}</div>
+            <div style="font-weight:700">${total}</div>
+          </div>
+        </div>
+        <div class="sub">${(o.items || []).slice(0,3).map(it => `${escapeHtml(it.product_name)} x${escapeHtml(String(it.quantity||0))}`).join(' • ')}</div>
+      </article>
+    `;
+  }).join('');
+}
+  } catch (e) {
+    console.error('loadDashboard error', e);
+  }
+}
+  // ---------- Orders ----------
+async function loadOrders(){
+  const wrap = qs('#ordersTableWrap');
+
+  // Render controls area (no Refresh button)
+  wrap.innerHTML = '<div class="controls"></div>';
+
+  try {
+    const res = await fetch('/admin/api/orders');
+    const data = await res.json();
+    if (!data.orders || data.orders.length === 0) {
+      wrap.innerHTML += '<p>No orders</p>';
+      return;
+    }
+
+    // helper to map status -> select class
+    const statusClass = s => {
+      const st = String(s || '').toLowerCase();
+      if (st === 'cancelled' || st === 'canceled') return 'status-cancelled';
+      if (st === 'pending') return 'status-pending';
+      if (st === 'ongoing' || st === 'on-going' || st === 'on going') return 'status-ongoing';
+      if (st === 'completed' || st === 'complete') return 'status-completed';
+      return 'status-ongoing';
+    };
+
+    const rows = data.orders.map(o => {
+      const itemsHtml = (o.items || []).map(it => `${escapeHtml(it.product_name)} x${escapeHtml(String(it.quantity||0))} (₱${Number(it.subtotal||0).toFixed(2)})`).join('<br>');
+      const sc = statusClass(o.status);
+      const sel = `
+        <select data-order="${o.id}" class="statusSelect ${sc}" aria-label="Change status for order ${o.id}">
+          <option value="pending" ${String(o.status)==='pending'?'selected':''}>Pending</option>
+          <option value="ongoing" ${String(o.status)==='ongoing'?'selected':''}>On-going</option>
+          <option value="completed" ${String(o.status)==='completed'?'selected':''}>Completed</option>
+          <option value="cancelled" ${String(o.status)==='cancelled'?'selected':''}>Cancelled</option>
+        </select>
+      `;
+      return `<tr>
+        <td>#${o.id}</td>
+        <td>${escapeHtml(o.name)}<br><small>${escapeHtml(o.email || '')}</small></td>
+        <td>₱${Number(o.total_amount).toFixed(2)}</td>
+        <td>${escapeHtml(o.pickup_date)} ${escapeHtml(o.pickup_time)}</td>
+        <td>${itemsHtml}</td>
+        <td>${sel}</td>
+      </tr>`;
+    }).join('');
+
+    wrap.innerHTML += `<table class="table" role="table" aria-label="Orders table">
+      <thead><tr><th>ID</th><th>Customer</th><th>Total</th><th>Pickup</th><th>Items</th><th>Status</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+    makeTableResponsive('#ordersTableWrap');
+
+    // Ensure selects have correct class and attach change handlers
+    qsa('.statusSelect').forEach(sel => {
+      sel.classList.remove('status-cancelled','status-pending','status-ongoing','status-completed');
+      const checked = sel.querySelector('option:checked');
+      const st = checked ? checked.value : sel.value;
+      sel.classList.add(statusClass(st));
+      sel.addEventListener('change', async (e) => {
+        const id = e.target.dataset.order;
+        const status = e.target.value;
+        try {
+          const r = await fetch(`/admin/api/orders/${id}/status`, {
+            method: 'PUT',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ status })
+          });
+          if (!r.ok) {
+            alert('Failed to update status');
+          } else {
+            e.target.classList.remove('status-cancelled','status-pending','status-ongoing','status-completed');
+            e.target.classList.add(statusClass(status));
+            // reload to reflect server state
+            loadOrders();
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Failed to update status');
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error(err);
+    wrap.innerHTML += '<p>Error loading orders</p>';
+  }
+}
+  // ---------- Inventory ----------
+ async function loadInventory(){
+  const wrap = qs('#inventoryTableWrap');
+
+  // Render only the controls container (no Refresh button)
+  wrap.innerHTML = `<div class="controls"></div>`;
+
+  // Wire up the existing New Item button (expected in HTML)
+  const globalNewBtn = qs('#newInventoryBtn');
+  if (globalNewBtn) {
+    globalNewBtn.onclick = showNewInventoryForm;
+  }
+
+  try {
+    const res = await fetch('/admin/api/inventory');
+    const data = await res.json();
+    const rows = (data.inventory || []).map(i => `<tr>
+      <td>${i.id}</td>
+      <td>${escapeHtml(i.product_name)}</td>
+      <td>${escapeHtml(i.sku || '')}</td>
+      <td>${escapeHtml(i.size || '')}</td>
+      <td>₱${Number(i.price).toFixed(2)}</td>
+      <td>${i.stock}</td>
+      <td>
+        <button class="small-btn btn editInv" data-id="${i.id}">Edit</button>
+        <button class="small-btn delBtn" data-id="${i.id}" style="background:#e53e3e">Delete</button>
+      </td>
+    </tr>`).join('');
+
+    wrap.innerHTML += `<table class="table"><thead><tr><th>ID</th><th>Product</th><th>SKU</th><th>Size</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table>`;
+
+    makeTableResponsive('#inventoryTableWrap');
+    // Wire up edit/delete buttons after table insertion
+    qsa('.editInv').forEach(b => b.addEventListener('click', (e) => editInventory(e.target.dataset.id)));
+    qsa('.delBtn').forEach(b => {
+  b.addEventListener('click', async (e) => {
+    const id = e.target.dataset.id;
+    const ok = await showConfirmModal('Delete this inventory item? This action cannot be undone.');
+    if (!ok) return;
+    try {
+      const r = await fetch(`/admin/api/inventory/${id}`, { method: 'DELETE' });
+      if (r.ok) {
+        loadInventory();
+      } else {
+        const text = await r.text().catch(()=>null);
+        alert('Delete failed' + (text ? (': ' + text) : ''));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Delete failed');
+    }
+  });
+});
+  } catch (e) {
+    console.error(e);
+    wrap.innerHTML += '<p>Error loading inventory</p>';
+  }
+}
+
+  function showNewInventoryForm(){
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `<div class="panel" role="dialog" aria-modal="true" aria-label="New inventory item">
+    <h3 style="margin:0 0 12px 0">New Inventory Item</h3>
+
+    <div class="form-row">
+      <label for="pname">Product name</label>
+      <input id="pname" class="input" placeholder="Enter Product Name: " />
+    </div>
+
+    <div class="form-row">
+      <label for="psku">SKU</label>
+      <input id="psku" class="input" placeholder="Stock keeping unit (optional)" />
+    </div>
+
+    <div class="form-row">
+      <label for="psize">Size</label>
+      <input id="psize" class="input" placeholder="e.g. Small, Medium, Extra Large" />
+    </div>
+
+    <div class="form-row">
+      <label for="pprice">Price</label>
+      <input id="pprice" class="input" placeholder="0.00" type="number" step="0.01" />
+      <div class="hint">Enter price in PHP (numbers only)</div>
+    </div>
+
+    <div class="form-row">
+      <label for="pstock">Stock</label>
+      <input id="pstock" class="input" placeholder="0" type="number" />
+      <div class="hint">Available units in stock</div>
+    </div>
+
+    <div class="actions" style="text-align:right">
+      <button id="cancelNew" class="btn cancel">Cancel</button>
+      <button id="saveNew" class="btn save">Save</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+
+  qs('#cancelNew').onclick = () => modal.remove();
+  qs('#saveNew').onclick = async () => {
+    const payload = {
+      product_name: qs('#pname').value.trim(),
+      sku: qs('#psku').value.trim(),
+      size: qs('#psize').value.trim(),
+      price: Number(qs('#pprice').value) || 0,
+      stock: Number(qs('#pstock').value) || 0
+    };
+
+    // Basic validation
+    if (!payload.product_name) {
+      alert('Please enter a product name.');
+      return;
+    }
+
+    try {
+      const r = await fetch('/admin/api/inventory', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if (r.ok) {
+        modal.remove();
+        loadInventory();
+      } else {
+        const text = await r.text().catch(()=>null);
+        alert('Failed to create item' + (text ? (': ' + text) : ''));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to create item');
+    }
+  };
+}
+
+  async function editInventory(id){
+  try {
+    const res = await fetch('/admin/api/inventory');
+    const data = await res.json();
+    const item = (data.inventory || []).find(i => String(i.id) === String(id));
+    if (!item) return alert('Item not found');
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `<div class="panel" role="dialog" aria-modal="true" aria-label="Edit inventory item">
+      <h3 style="margin:0 0 12px 0">Edit Item #${escapeHtml(String(item.id))}</h3>
+
+      <div class="form-row">
+        <label for="pname">Product name</label>
+        <input id="pname" class="input" value="${escapeHtml(item.product_name)}" />
+      </div>
+
+      <div class="form-row">
+        <label for="psku">SKU</label>
+        <input id="psku" class="input" value="${escapeHtml(item.sku || '')}" />
+      </div>
+
+      <div class="form-row">
+        <label for="psize">Size</label>
+        <input id="psize" class="input" value="${escapeHtml(item.size || '')}" />
+      </div>
+
+      <div class="form-row">
+        <label for="pprice">Price</label>
+        <input id="pprice" class="input" type="number" step="0.01" value="${Number(item.price || 0)}" />
+      </div>
+
+      <div class="form-row">
+        <label for="pstock">Stock</label>
+        <input id="pstock" class="input" type="number" value="${Number(item.stock || 0)}" />
+      </div>
+
+      <div class="actions" style="text-align:right">
+        <button id="cancelEdit" class="btn cancel">Cancel</button>
+        <button id="saveEdit" class="btn save">Save</button>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+
+    qs('#cancelEdit').onclick = () => modal.remove();
+    qs('#saveEdit').onclick = async () => {
+      const payload = {
+        product_name: qs('#pname').value.trim(),
+        sku: qs('#psku').value.trim(),
+        size: qs('#psize').value.trim(),
+        price: Number(qs('#pprice').value) || 0,
+        stock: Number(qs('#pstock').value) || 0
+      };
+
+      if (!payload.product_name) {
+        alert('Please enter a product name.');
+        return;
+      }
+
+      try {
+        const r = await fetch(`/admin/api/inventory/${id}`, {
+          method: 'PUT',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(payload)
+        });
+        if (r.ok) {
+          modal.remove();
+          loadInventory();
+        } else {
+          const text = await r.text().catch(()=>null);
+          alert('Failed to update item' + (text ? (': ' + text) : ''));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Failed to update item');
+      }
+    };
+  } catch (e) {
+    console.error(e);
+    alert('Error loading item');
+  }
+}
+
+// Helper: show a modal confirmation and return a Promise<boolean>
+function showConfirmModal(message = 'Are you sure?') {
+  return new Promise(resolve => {
+    const modal = document.createElement('div');
+    modal.className = 'confirm-modal';
+    modal.innerHTML = `
+      <div class="panel" role="dialog" aria-modal="true" aria-label="Confirmation">
+        <h4>Confirm action</h4>
+        <p>${escapeHtml(message)}</p>
+        <div class="actions">
+          <button class="btn cancel" id="confirmCancel">Cancel</button>
+          <button class="btn confirm" id="confirmOk">Delete</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const cleanup = (result) => {
+      modal.remove();
+      resolve(result);
+    };
+
+    modal.querySelector('#confirmCancel').onclick = () => cleanup(false);
+    modal.querySelector('#confirmOk').onclick = () => cleanup(true);
+
+    // keyboard support: Esc to cancel, Enter to confirm
+    const keyHandler = (e) => {
+      if (e.key === 'Escape') { cleanup(false); document.removeEventListener('keydown', keyHandler); }
+      if (e.key === 'Enter')  { cleanup(true); document.removeEventListener('keydown', keyHandler); }
+    };
+    document.addEventListener('keydown', keyHandler);
+  });
+}
+
+  // ---------- Reports ----------
+async function loadReports(){
+  const wrap = qs('#reportsSummary');
+  wrap.innerHTML = '<div>Loading...</div>';
+
+  try {
+    // Fetch both endpoints in parallel
+    const [ordersRes, eggRes] = await Promise.all([
+      fetch('/admin/api/orders'),
+      fetch('/admin/api/egg_orders').catch(err => { console.warn('egg_orders fetch failed', err); return null; })
+    ]);
+
+    // --- Parse orders endpoint ---
+    let allOrders = [];
+    if (ordersRes && ordersRes.ok) {
+      const data = await ordersRes.json();
+      allOrders = Array.isArray(data.orders) ? data.orders : (Array.isArray(data) ? data : []);
+    } else {
+      console.warn('/admin/api/orders returned non-ok or missing response');
+    }
+
+    // --- Parse egg_orders endpoint into flexible shapes ---
+    let eggJson = null;
+    try {
+      if (eggRes && eggRes.ok) {
+        eggJson = await eggRes.json();
+      } else if (eggRes) {
+        console.warn('/admin/api/egg_orders returned non-ok status:', eggRes.status);
+      }
+    } catch (e) {
+      console.warn('Failed to parse egg_orders JSON', e);
+    }
+
+    // We'll build combined structures:
+    // - completedOrdersCombined: array of order-like objects (with total_amount, status, created_at/pickup_date, items)
+    // - aggregatedEggSalesByDay: array of { date, sales, qty } if egg endpoint provides aggregated rows
+    // - eggTopItems: array of { name, qty, sales } if provided
+    const completedOrdersCombined = [];
+    const aggregatedEggSalesByDay = [];
+    const eggTopItems = [];
+
+    // Normalize orders from /admin/api/orders (keep only completed)
+    const completedFromOrders = (Array.isArray(allOrders) ? allOrders : []).filter(o => String(o.status).toLowerCase() === 'completed');
+    completedFromOrders.forEach(o => completedOrdersCombined.push(o));
+
+    // Inspect eggJson for possible shapes
+    if (eggJson) {
+      // If eggJson is an array, it might be aggregated salesByDay rows or raw orders
+      if (Array.isArray(eggJson)) {
+        // Heuristic: if elements have sales/qty/date -> aggregated; if elements have status/total_amount -> orders
+        const sample = eggJson[0] || {};
+        if ('sales' in sample || 'amount' in sample || 'qty' in sample || 'orders_count' in sample) {
+          // treat as aggregated rows
+          eggJson.forEach(r => {
+            const date = r.order_date || r.date || r.day || r.label || (typeof r === 'string' ? r : null);
+            const sales = Number(r.sales || r.amount || r.sales_amount || r[1] || 0) || 0;
+            const qty = Number(r.qty || r.quantity || r.orders_count || r[2] || 0) || 0;
+            if (date) aggregatedEggSalesByDay.push({ date: String(date).slice(0,10), sales, qty });
+          });
+        } else if ('status' in sample || 'total_amount' in sample || 'items' in sample) {
+          // treat as orders array
+          eggJson.forEach(o => {
+            if (String(o.status).toLowerCase() === 'completed') completedOrdersCombined.push(o);
+          });
+        } else {
+          // fallback: try to detect rows with numeric fields
+          eggJson.forEach(r => {
+            const date = r.date || r.order_date || r.day || null;
+            const sales = Number(r.sales || r.amount || 0) || 0;
+            const qty = Number(r.qty || r.quantity || 0) || 0;
+            if (date && (sales || qty)) aggregatedEggSalesByDay.push({ date: String(date).slice(0,10), sales, qty });
+          });
+        }
+      } else if (typeof eggJson === 'object') {
+        // object shapes: { salesByDay: [...], topItems: [...], orders: [...] } etc.
+        if (Array.isArray(eggJson.salesByDay) || Array.isArray(eggJson.sales) || Array.isArray(eggJson.salesRows)) {
+          const arr = eggJson.salesByDay || eggJson.sales || eggJson.salesRows;
+          arr.forEach(r => {
+            const date = r.order_date || r.date || r.orderDate || r.day || r.label || (typeof r === 'string' ? r : null);
+            const sales = Number(r.sales || r.amount || r.sales_amount || r[1] || 0) || 0;
+            const qty = Number(r.qty || r.quantity || r.orders_count || r[2] || 0) || 0;
+            if (date) aggregatedEggSalesByDay.push({ date: String(date).slice(0,10), sales, qty });
+          });
+        }
+
+        if (Array.isArray(eggJson.topItems) || Array.isArray(eggJson.top_items) || Array.isArray(eggJson.items)) {
+          const arr = eggJson.topItems || eggJson.top_items || eggJson.items;
+          arr.forEach(it => {
+            const name = it.product_name || it.name || it.title || 'Unknown';
+            const qty = Number(it.qty || it.quantity || it.orders_count || it.count || 0) || 0;
+            const sales = Number(it.sales || it.sales_amount || it.subtotal || it.revenue || 0) || 0;
+            eggTopItems.push({ name, qty, sales });
+          });
+        }
+
+        if (Array.isArray(eggJson.orders)) {
+          eggJson.orders.forEach(o => {
+            if (String(o.status).toLowerCase() === 'completed') completedOrdersCombined.push(o);
+          });
+        }
+
+        // If eggJson itself contains order-like fields (rare), try to detect
+        if (!aggregatedEggSalesByDay.length && !completedOrdersCombined.length && !eggTopItems.length) {
+          // try to find any nested arrays
+          const keys = Object.keys(eggJson);
+          for (const k of keys) {
+            if (Array.isArray(eggJson[k])) {
+              const sample = eggJson[k][0] || {};
+              if ('status' in sample || 'total_amount' in sample) {
+                eggJson[k].forEach(o => { if (String(o.status).toLowerCase() === 'completed') completedOrdersCombined.push(o); });
+                break;
+              } else if ('sales' in sample || 'qty' in sample || 'date' in sample) {
+                eggJson[k].forEach(r => {
+                  const date = r.order_date || r.date || r.day || r.label || null;
+                  const sales = Number(r.sales || r.amount || 0) || 0;
+                  const qty = Number(r.qty || r.quantity || 0) || 0;
+                  if (date) aggregatedEggSalesByDay.push({ date: String(date).slice(0,10), sales, qty });
+                });
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // --- Combine totals: total sales and completed orders count ---
+    // From completedOrdersCombined (which includes completed orders from both sources when available)
+    // For aggregatedEggSalesByDay we add their sales and qty to totals as well
+    const totalSalesFromOrders = completedOrdersCombined.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
+    const totalCompletedOrdersFromOrders = completedOrdersCombined.length;
+
+    const totalSalesFromEggAggregates = aggregatedEggSalesByDay.reduce((s, r) => s + (Number(r.sales) || 0), 0);
+    const totalCompletedOrdersFromEggAggregates = aggregatedEggSalesByDay.reduce((s, r) => s + (Number(r.qty) || 0), 0);
+
+    const totalSalesValue = totalSalesFromOrders + totalSalesFromEggAggregates;
+    const totalCompletedOrders = totalCompletedOrdersFromOrders + totalCompletedOrdersFromEggAggregates;
+
+    // Update top summary cards
+    wrap.innerHTML = `<div class="cards">
+        <div class="card"><strong>₱${Number(totalSalesValue).toFixed(2)}</strong><span>Total Sales (completed)</span></div>
+        <div class="card"><strong>${totalCompletedOrders}</strong><span>Completed Orders</span></div>
+      </div>`;
+
+    // --- Sales by Day (last 30 days) map seeded with last 30 days ---
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+    const today = new Date();
+    const startDate = new Date(today.getTime() - (29 * MS_PER_DAY)); // include today => 30 days total
+
+    const salesByDayMap = new Map();
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(startDate.getTime() + i * MS_PER_DAY);
+      const key = d.toISOString().slice(0,10);
+      salesByDayMap.set(key, { orders: 0, sales: 0 });
+    }
+
+    // Fill from completedOrdersCombined (order-level data)
+    completedOrdersCombined.forEach(o => {
+      const rawDate = o.pickup_date || o.created_at || o.date || o.order_date || null;
+      if (!rawDate) return;
+      const d = new Date(rawDate);
+      if (isNaN(d)) return;
+      const key = d.toISOString().slice(0,10);
+      if (!salesByDayMap.has(key)) return; // outside last 30 days
+      const entry = salesByDayMap.get(key);
+      entry.orders += 1;
+      entry.sales += Number(o.total_amount) || 0;
+      salesByDayMap.set(key, entry);
+    });
+
+    // Merge aggregatedEggSalesByDay into salesByDayMap (these are already aggregated per date)
+    aggregatedEggSalesByDay.forEach(r => {
+      const key = String(r.date).slice(0,10);
+      if (!salesByDayMap.has(key)) return;
+      const entry = salesByDayMap.get(key);
+      entry.orders += Number(r.qty) || 0;
+      entry.sales += Number(r.sales) || 0;
+      salesByDayMap.set(key, entry);
+    });
+
+    // --- Sales by Day table with Show more / Show less ---
+    (function() {
+      const sortedDays = Array.from(salesByDayMap.entries()).sort((a,b) => a[0].localeCompare(b[0])); // ascending
+
+      const fullRowsHtml = sortedDays.map(([day, val]) =>
+        `<tr><td>${escapeHtml(day)}</td><td style="text-align:right">${val.orders}</td><td style="text-align:right">₱${Number(val.sales).toFixed(2)}</td></tr>`
+      ).join('');
+
+      const initialRows = 7;
+      const lastN = sortedDays.slice(Math.max(0, sortedDays.length - initialRows));
+      const initialRowsHtml = lastN.map(([day, val]) =>
+        `<tr><td>${escapeHtml(day)}</td><td style="text-align:right">${val.orders}</td><td style="text-align:right">₱${Number(val.sales).toFixed(2)}</td></tr>`
+      ).join('');
+
+      qs('#salesByDay').innerHTML = `
+        <div class="sales-by-day-wrap">
+          <div class="sales-by-day-table" id="salesByDayTableContainer">
+            <table class="table" aria-label="Sales by day table">
+              <thead>
+                <tr><th>Date</th><th style="text-align:right">Orders</th><th style="text-align:right">Sales</th></tr>
+              </thead>
+              <tbody id="salesByDayTbody">
+                ${initialRowsHtml}
+              </tbody>
+            </table>
+          </div>
+          <button id="salesByDayToggle" class="show-more-btn" aria-expanded="false">Show more</button>
+        </div>
+      `;
+
+      makeTableResponsive('#salesByDay');
+
+      const toggleBtn = document.getElementById('salesByDayToggle');
+      toggleBtn.dataset.fullRows = fullRowsHtml;
+      toggleBtn.dataset.initialRows = initialRowsHtml;
+
+      toggleBtn.addEventListener('click', () => {
+        const tbody = document.getElementById('salesByDayTbody');
+        const container = document.getElementById('salesByDayTableContainer');
+        const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+        if (!expanded) {
+          tbody.innerHTML = toggleBtn.dataset.fullRows;
+          container.classList.add('expanded');
+          toggleBtn.textContent = 'Show less';
+          toggleBtn.setAttribute('aria-expanded', 'true');
+        } else {
+          tbody.innerHTML = toggleBtn.dataset.initialRows;
+          container.classList.remove('expanded');
+          toggleBtn.textContent = 'Show more';
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+
+      toggleBtn.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          toggleBtn.click();
+        }
+      });
+    })();
+
+    // --- Chart: combine orders table and egg_orders for chart data ---
+try {
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js not loaded. Add <script src="/vendor/chart.js/dist/chart.umd.min.js"><\\/script> in <head>.');
+  } else {
+    // create canvas if missing
+    const chartHolder = document.getElementById('salesByDay');
+    if (chartHolder && !document.getElementById('eggOrdersChart')) {
+      const wrapEl = document.createElement('div');
+      wrapEl.style.height = '260px';
+      wrapEl.style.marginBottom = '12px';
+      wrapEl.innerHTML = '<canvas id="eggOrdersChart" aria-label="Sales by day chart" style="width:100%;height:240px"></canvas>';
+      chartHolder.insertBefore(wrapEl, chartHolder.firstChild);
+    }
+
+    // Build a combined map of dates -> { sales, orders }
+    // Start with salesByDayMap (seeded with last 30 days and already merged with aggregatedEggSalesByDay earlier)
+    const combinedMap = new Map();
+    // copy existing 30-day map entries
+    for (const [k, v] of salesByDayMap.entries()) {
+      combinedMap.set(k, { sales: Number(v.sales) || 0, orders: Number(v.orders) || 0 });
+    }
+
+    // Also include any aggregatedEggSalesByDay rows that might be outside the 30-day window
+    // aggregatedEggSalesByDay is an array of { date, sales, qty } parsed earlier
+    if (Array.isArray(aggregatedEggSalesByDay) && aggregatedEggSalesByDay.length) {
+      aggregatedEggSalesByDay.forEach(r => {
+        const key = String(r.date).slice(0,10);
+        const sales = Number(r.sales) || 0;
+        const qty = Number(r.qty) || 0;
+        if (combinedMap.has(key)) {
+          const cur = combinedMap.get(key);
+          cur.sales = (Number(cur.sales) || 0) + sales;
+          cur.orders = (Number(cur.orders) || 0) + qty;
+          combinedMap.set(key, cur);
+        } else {
+          combinedMap.set(key, { sales, orders: qty });
+        }
+      });
+    }
+
+    // If there are any completed orders from egg_orders that were parsed as order objects
+    // they were already merged into completedOrdersCombined and then into salesByDayMap above.
+    // Now build sorted arrays for the chart (ascending by date)
+    const sortedCombined = Array.from(combinedMap.entries()).sort((a,b) => a[0].localeCompare(b[0]));
+    const labels = sortedCombined.map(([d]) => d);
+    const salesData = sortedCombined.map(([d, v]) => Number(v.sales) || 0);
+    const qtyData = sortedCombined.map(([d, v]) => Number(v.orders) || 0);
+
+    const canvas = document.getElementById('eggOrdersChart');
+    if (canvas) {
+      canvas.style.width = '100%';
+      canvas.style.height = '240px';
+
+      if (window._eggOrdersChartInstance) {
+        try { window._eggOrdersChartInstance.destroy(); } catch (e) { console.warn(e); }
+        window._eggOrdersChartInstance = null;
+      }
+
+      window._eggOrdersChartInstance = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Sales (₱)',
+              data: salesData,
+              borderColor: '#7B542F',
+              backgroundColor: 'rgba(123,84,47,0.08)',
+              tension: 0.25,
+              yAxisID: 'y'
+            },
+            {
+              label: 'Orders',
+              data: qtyData,
+              borderColor: '#FFCF71',
+              backgroundColor: 'rgba(43,138,239,0.08)',
+              tension: 0.25,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { display: true },
+            y: {
+              type: 'linear',
+              position: 'left',
+              title: { display: true, text: 'Sales (₱)' },
+              ticks: { callback: v => '₱' + Number(v).toFixed(2) }
+            },
+            y1: {
+              type: 'linear',
+              position: 'right',
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'Orders' }
+            }
+          },
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.dataset.label || '';
+                  const value = context.parsed.y;
+                  if (context.dataset.label === 'Sales (₱)') return `${label}: ₱${Number(value).toFixed(2)}`;
+                  return `${label}: ${value}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    } else {
+      console.warn('eggOrdersChart canvas not found after insertion.');
+    }
+  }
+} catch (chartErr) {
+  console.error('Error rendering combined chart:', chartErr);
+}
+
+    // Use only completed orders from the orders endpoint (completedFromOrders)
+(function() {
+  const productMap = new Map();
+
+  // completedFromOrders is the array of completed orders parsed earlier from /admin/api/orders
+  (Array.isArray(completedFromOrders) ? completedFromOrders : []).forEach(o => {
+    if (!Array.isArray(o.items)) return;
+    o.items.forEach(it => {
+      const name = it.product_name || it.name || it.title || 'Unknown';
+      const qty = Number(it.quantity || it.qty || it.count || 0);
+      const subtotal = Number(it.subtotal || (it.price ? (Number(it.price) * qty) : 0)) || 0;
+      if (!productMap.has(name)) productMap.set(name, { qty: 0, sales: 0 });
+      const cur = productMap.get(name);
+      cur.qty += qty;
+      cur.sales += subtotal;
+      productMap.set(name, cur);
+    });
+  });
+
+  const topProducts = Array.from(productMap.entries())
+    .map(([name, v]) => ({ name, qty: v.qty, sales: v.sales }))
+    .sort((a,b) => {
+      if (b.sales !== a.sales) return b.sales - a.sales;
+      return b.qty - a.qty;
+    });
+
+  const topProductsRows = topProducts.map(p =>
+    `<tr><td>${escapeHtml(p.name)}</td><td style="text-align:right">${p.qty}</td><td style="text-align:right">₱${Number(p.sales).toFixed(2)}</td></tr>`
+  ).join('');
+
+  qs('#topProducts').innerHTML = `
+    <h3>Current Top Products (bases from the Margie and Rj Egg Store Ordering Page)</h3>
+    <table class="table">
+      <thead>
+        <tr><th>Product</th><th style="text-align:right">Qty Sold</th><th style="text-align:right">Sales</th></tr>
+      </thead>
+      <tbody>
+        ${topProductsRows}
+      </tbody>
+    </table>
+  `;
+
+  makeTableResponsive('#topProducts');
+})();
+
+  } catch (e) {
+    console.error(e);
+    qs('#reportsSummary').innerHTML = '<div>Error loading reports</div>';
+    qs('#salesByDay').innerHTML = '';
+    qs('#topProducts').innerHTML = '';
+  }
+}
+
+
+  // ---------- Users ----------
+  async function loadUsers(){
+  const wrap = qs('#usersTableWrap');
+  wrap.innerHTML = '<div class="controls"></div>';
+  try {
+    const res = await fetch('/admin/api/users');
+    const data = await res.json();
+    const rows = (data.users || []).map(u => `<tr><td>${u.id}</td><td>${escapeHtml(u.username)}</td><td>${escapeHtml(u.email)}</td><td>${u.is_admin? 'Yes':''}</td></tr>`).join('');
+    wrap.innerHTML += `<table class="table"><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Admin</th></tr></thead><tbody>${rows}</tbody></table>`;
+
+    makeTableResponsive('#usersTableWrap');
+  } catch (e) {
+    console.error(e);
+    wrap.innerHTML += '<p>Error loading users</p>';
+  }
+}
+
+  // Utility: map stored status to human label
+  function humanStatus(status){
+    switch(String(status)){
+      case 'pending': return 'pending';
+      case 'ongoing': return 'on-going';
+      case 'completed': return 'completed';
+      case 'cancelled': return 'cancelled';
+      // backward compatibility
+      case 'placed': return 'pending';
+      default: return String(status || '');
+    }
+  }
+
+  // Basic HTML escape to avoid injection in inserted strings
+  function escapeHtml(str){
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); });
+  }
+
+})();
+
+// Call this after inserting a <table class="table"> into the DOM
+function makeTableResponsive(wrapperSelector) {
+  const wrap = document.querySelector(wrapperSelector);
+  if (!wrap) return;
+  // Ensure wrapper exists and has the scroll container class
+  if (!wrap.classList.contains('table-wrap')) {
+    // wrap the first table child if not already wrapped
+    const tbl = wrap.querySelector('table.table');
+    if (tbl) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-wrap';
+      tbl.parentNode.insertBefore(wrapper, tbl);
+      wrapper.appendChild(tbl);
+      // add data-labels for stacked fallback
+      const headers = Array.from(tbl.querySelectorAll('thead th')).map(h => h.textContent.trim());
+      tbl.querySelectorAll('tbody tr').forEach(row => {
+        Array.from(row.children).forEach((td, i) => {
+          td.setAttribute('data-label', headers[i] || '');
+        });
+      });
+    }
+  }
+  // Optionally add .stacked class on very small screens
+  function updateStacked() {
+    const wrapper = document.querySelector(wrapperSelector).querySelector('.table-wrap');
+    if (!wrapper) return;
+    const tbl = wrapper.querySelector('table.table');
+    if (!tbl) return;
+    if (window.innerWidth <= 420) {
+      wrapper.classList.add('stacked');
+      tbl.classList.add('stacked');
+    } else {
+      wrapper.classList.remove('stacked');
+      tbl.classList.remove('stacked');
+    }
+  }
+  updateStacked();
+  window.addEventListener('resize', () => { clearTimeout(window._tblResize); window._tblResize = setTimeout(updateStacked, 120); });
+}
+</script>
+</body>
+</html>

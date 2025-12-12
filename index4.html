@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset Password</title>
+
+    <!-- Icons + CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" rel="stylesheet" />
+    <link href="styles.css" rel="stylesheet" />
+</head>
+
+
+
+<body>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <p id="modal-message"></p>
+        <button id="modal-close">OK</button>
+    </div>
+</div>
+    <section class="login">
+        <div class="login__container grid">
+
+            <!-- LEFT IMAGE SIDE -->
+            <div class="login__swiper">
+                <div class="login__swiper-data"></div>
+
+                <div>
+                    <img src="img/logo.png" alt="image" class="login__swiper-img">
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: RESET PASSWORD FORM -->
+            <div class="login__area grid">
+                <div class="login__data">
+                    <h1 class="login__title">Reset Your Password</h1>
+
+                    <p class="login__description">
+                        Enter your new password below.
+                    </p>
+                </div>
+
+                <form action="/reset-password" method="POST" class="login__form">
+                    <div class="login__content grid">
+
+                        <div class="login__box">
+                            <input type="password" name="new_password" placeholder="New Password" required class="login__input" id="newPass">
+                            <i class="ri-lock-password-line"></i>
+                        </div>
+
+                        <div class="login__box">
+                            <input type="password" name="confirm_password" placeholder="Confirm Password" required class="login__input" id="confirmPass">
+                            <i class="ri-lock-line"></i>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="login__button">Update Password</button>
+                </form>
+
+                <p class="login__switch">
+                    Remembered your password?  
+                    <a href="index.html" class="login__sign">Log in here</a>
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+     <script src="main.js"></script>
+</body>
+</html>

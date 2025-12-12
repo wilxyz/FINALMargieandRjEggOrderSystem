@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" rel="stylesheet" />
+    <link href="styles.css" rel="stylesheet"/>
+</head>
+
+
+
+<body>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <p id="modal-message"></p>
+        <button id="modal-close">OK</button>
+    </div>
+</div>
+    <section class="login">
+        <div class="login__container grid">
+            
+            <!-- Picture side -->
+            <div class="login__swiper">
+                <div>
+                    <img src="img/logo.png" alt="image" class="login__swiper-img">
+                </div>
+            </div>
+
+            <!-- Form side -->
+            <div class="login__area grid">
+                <div class="login__data">
+                   <h1 class="login__title">Create Your Account!</h1>
+                   <p class="login__description">Please enter your details to sign up.</p>
+                </div>
+
+                <form action="/signup" method="POST" class="login__form">
+                    <div class="login__content grid">
+                        <div class="login__box">
+                            <input type="text" name="username" placeholder="Username" required class="login__input">
+                            <i class="ri-user-line"></i>
+                        </div>
+
+                        <div class="login__box">
+                            <input type="email" name="email" placeholder="Email" required class="login__input">
+                            <i class="ri-mail-line"></i>
+                        </div>
+
+                        <div class="login__box">
+                            <input type="password" name="password" placeholder="Password" required class="login__input" id="signupPass">
+                            <i class="ri-eye-line login__eye" id="signupEye"></i>
+                        </div>
+
+                        <div class="login__box">
+                            <input type="password" name="confirm_password" placeholder="Confirm Password" required class="login__input" id="confirmPass">
+                            <i class="ri-eye-line login__eye" id="confirmEye"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login__button">Sign Up</button>
+                </form>
+
+                <p class="login__switch">
+                    Already have an account? 
+                    <a href="index.html" class="login__sign">Log In Here.</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script src="main.js"></script>
+
+</body>
+</html>
