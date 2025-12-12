@@ -152,10 +152,25 @@ npm start
 ## User Interface of the Website
 
 ### Log-In Page
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_1.png" width="800" height="800" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_1.png" width="1000" height="1000" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_2.png" width="1000" height="1000" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_3.png" width="1000" height="1000" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_4.png" width="1000" height="1000" align= "center"/>
+
+### Log-In Page - Sign Up
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Sign_Up.png" width="1000" height="1000" align= "center"/>
+
+### Log-In Page - Forgot Password
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Forgot_Pass.png" width="1000" height="1000" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Verify_OTP.png" width="1000" height="1000" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Reset_Pass.png" width="1000" height="1000" align= "center"/>
 
 ### Contact Us
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Contact_Us.png" width="1000" height="1000" align= "center"/>
 
 ### Ordering Page
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page.png" width="1000" height="1000" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page2.png" width="1000" height="1000" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Ordering_Page_PrintReceipt.png" width="1000" height="1000" align= "center"/>
 
 ### Admin's Console
