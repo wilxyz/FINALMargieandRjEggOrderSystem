@@ -152,7 +152,7 @@ npm start
 ## User Interface of the Website
 
 ### Log-In Page
-<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_1.png" width="300" height="300" align= "center"/>
+<img src="https://github.com/wilxyz/FINALMargieandRjEggOrderSystem/blob/main/UI%20screenshots/Login_1.png" width="800" height="800" align= "center"/>
 
 ### Contact Us
 
